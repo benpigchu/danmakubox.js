@@ -1,0 +1,36 @@
+{
+  "name": "danmakubox.js",
+  "version": "0.0.0",
+  "description": "A javascript danmaku renderer for canvas2d",
+  "main": "main.js",
+  "scripts": {
+    "build": "rollup -c",
+    "build-min": "rollup -c && uglifyjs dist/danmakubox.js -cm > dist/danmakubox.min.js",
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benpigchu/danmakubox.js.git"
+  },
+  "keywords": [
+    "danmaku",
+    "canvas",
+    "canvas2d"
+  ],
+  "author": "benpigchu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benpigchu/danmakubox.js/issues"
+  },
+  "homepage": "https://github.com/benpigchu/danmakubox.js#readme",
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "rollup": "^0.34.3",
+    "rollup-plugin-babel": "^2.6.1",
+    "uglify-js": "^2.7.0"
+  }
+}

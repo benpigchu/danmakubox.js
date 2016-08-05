@@ -1,0 +1,27 @@
+<!doctype html>
+<!--the render page-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>DanmakuRenderer</title>
+	<style>
+		#renderer {
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+	<canvas id="renderer"></canvas>
+</div>
+</body>
+<script src="../dist/danmakubox.min.js"></script>
+<script>
+let renderer = new DanmakuBox.DanmakuRenderer("renderer");
+setInterval(()=>{renderer.send("nyan")},200)
+</script>
+</html>
