@@ -10,7 +10,7 @@ export class Danmaku {
 		// style
 		this.time = this.renderer.time
 		this.color = this.renderer.color
-    this.strokeColor = this.renderer.strokeColor
+		this.strokeColor = this.renderer.strokeColor
 
 		// get size
 		this.renderer.canvas.font = this.renderer.fontSize + "px Roboto, Microsoft YaHei, 黑体, 宋体, sans-serif"
@@ -35,11 +35,11 @@ export class Danmaku {
 			let end = false
 
 			if (limit.from < 0) {
-        limit.from = 0
-      }
-			if (limit.to > this.renderer.element.height) {
-        limit.to = this.renderer.element.height
-      }
+				limit.from = 0
+			}
+					if (limit.to > this.renderer.element.height) {
+				limit.to = this.renderer.element.height
+			}
 
 			for (let i = 0; i < limitData.length; i++) {
 

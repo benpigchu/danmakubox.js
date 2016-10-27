@@ -51,17 +51,17 @@ export class DanmakuRenderer {
 		return false
 	}
 
-  /// get limit to the new added danmaku
-  getLimit(height, time) {
-    let limitList = []
-    for (let danmaku of this.danmakuPool) {
-			limitList.push({
-				from: danmaku.y - height,
-				to: danmaku.y + danmaku.height,
-				max: danmaku.getMaxLength(time)
-			})
-		}
-    return limitList
-  }
+  	/// get limit to the new added danmaku
+	getLimit(height, time) {
+		let limitList = []
+		for (let danmaku of this.danmakuPool) {
+				limitList.push({
+					from: danmaku.y - height,
+					to: danmaku.y + danmaku.height,
+					max: danmaku.getMaxLength(time)
+				})
+			}
+		return limitList
+	}
 
 }

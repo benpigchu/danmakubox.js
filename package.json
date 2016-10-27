@@ -4,7 +4,7 @@
   "description": "A javascript danmaku renderer for canvas2d",
   "main": "main.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && rollup -c rollup.config.es6global.js",
     "build-min": "rollup -c && uglifyjs dist/danmakubox.js -cm > dist/danmakubox.min.js",
     "dev": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
