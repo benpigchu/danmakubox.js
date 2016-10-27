@@ -26,7 +26,7 @@ export class Danmaku {
 
 		// get y
 		// avoiding danmaku overlaying
-		let limitList = this.renderer.getLimit(this.height, this.time)
+		let limitList = this.renderer._getLimit(this.height, this.time)
 
 		let limitData = [{y: 0, max: 0}, {y: this.renderer.element.height, max: Infinity}]
 		for (let limit of limitList) {

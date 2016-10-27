@@ -17,42 +17,82 @@ export class DanmakuRenderer {
 		// init
 		this.danmakuPool = new Set()
 		this.timeStamp = Date.now()
+		this.isRunning = false
+		this.isAutoRender = false
+		this.renderLoopId = 0
 
-		// start render
-		requestAnimationFrame(this.render.bind(this))
+	}
 
+	/// play danmaku
+	play(){
+		this.update()
+		this.isRunning=true
+	}
+
+	/// pause
+	pause(){
+		this.update()
+		this.isRunning=false
+	}
+
+	/// start auto render
+	startAutoRender() {
+		this.isAutoRender = true
+		this._autoRender()
+	}
+
+	/// stop auto render
+	stopAutoRender() {
+		this.isAutoRender = false
+		cancelAnimationFrame(this.renderLoopId)
 	}
 
 	/// add danmaku into danmakuPool
 	send(content) {
+		this.update()
 		this.danmakuPool.add(new Danmaku(this, content))
 	}
 
 	/// render danmaku
 	render() {
-		this.checkSize()
+		this._checkSize()
 		this.canvas.clearRect(0, 0, this.element.width, this.element.height)
-		let currentTime = Date.now()
+		this.update()
 		for (let danmaku of this.danmakuPool) {
-			danmaku.step(currentTime - this.timeStamp)
 			danmaku.render()
 		}
+	}
+
+	/// update danmaku
+	update() {
+		let currentTime = Date.now()
+		if(this.isRunning&&(currentTime - this.timeStamp>0)){
+			for (let danmaku of this.danmakuPool) {
+				danmaku.step(currentTime - this.timeStamp)
+			}
+		}
 		this.timeStamp = currentTime
-		requestAnimationFrame(this.render.bind(this))
+	}
+
+	/// auto render
+	_autoRender() {
+		this.render()
+		this.renderLoopId = requestAnimationFrame(this._autoRender.bind(this))
 	}
 
 	/// resize canvas
-	checkSize() {
-		if (this.element.width !== window.innerWidth || this.element.height !== window.innerHeight) {
-			this.element.width = window.innerWidth
-			this.element.height = window.innerHeight
+	_checkSize() {
+		let elementRect=this.element.getBoundingClientRect()
+		if (this.element.width !== elementRect.width || this.element.height !== elementRect.height) {
+			this.element.width = elementRect.width
+			this.element.height = elementRect.height
 			return true
 		}
 		return false
 	}
 
   	/// get limit to the new added danmaku
-	getLimit(height, time) {
+	_getLimit(height, time) {
 		let limitList = []
 		for (let danmaku of this.danmakuPool) {
 				limitList.push({
