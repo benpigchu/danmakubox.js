@@ -140,6 +140,11 @@ export class Danmaku {
 
 	/// get the max length of danmaku that appear with the same y and will not catch this danmaku (may be negative)
 	getMaxLength(time) {
-		return (this.renderer.element.width - 16) * time / (this.time - this.age) - this.renderer.element.width
+		let keepOrderWhenEnd = (this.renderer.element.width - 16) * time / (this.time - this.age) - this.renderer.element.width
+		let keepOrderWhenBegin = (this.renderer.element.width + this.width) * this.age / this.time - this.width - 16
+		if (keepOrderWhenBegin > 0) {
+			keepOrderWhenBegin = Infinity
+		}
+		return Math.min(keepOrderWhenBegin,keepOrderWhenEnd)
 	}
 }

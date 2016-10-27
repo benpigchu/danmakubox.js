@@ -26,6 +26,6 @@
 let renderer = new DanmakuBox.DanmakuRenderer("renderer");
 renderer.play()
 renderer.startAutoRender()
-setInterval(()=>{renderer.send("nyan")},200)
+setInterval(()=>{renderer.send(["nya","nyanyanyanyanyanya~~"][parseInt(Math.random()*1.5)])},200)
 </script>
 </html>
