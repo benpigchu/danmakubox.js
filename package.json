@@ -1,14 +1,13 @@
 {
   "name": "danmakubox.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A javascript danmaku renderer for canvas2d",
   "main": "main.js",
   "scripts": {
     "build": "rollup -c && rollup -c rollup.config.es6global.js",
     "build-min": "rollup -c && uglifyjs dist/danmakubox.js -cm > dist/danmakubox.min.js",
     "dev": "rollup -c -w",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "rollup -c && rollup -c rollup.config.es6global.js && uglifyjs dist/danmakubox.js -cm > dist/danmakubox.min.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
