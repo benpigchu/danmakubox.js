@@ -2,7 +2,7 @@
 A Danmaku Render Library
 
 ## How to use
-Include dist/danmakubox.min.js, and do this:
+Include dist/danmakubox.min.js, add a `<canvas id="renderer">` element in document , and do this:
 
 ```javascript
 let renderer = new DanmakuBox.DanmakuRenderer("renderer");

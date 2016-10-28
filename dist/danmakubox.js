@@ -1096,13 +1096,20 @@ var DanmakuRenderer = function () {
 			this.danmakuPool.add(new Danmaku(this, content));
 		}
 
+		/// clear danmakuPool
+
+	}, {
+		key: "clear",
+		value: function clear() {
+			this.danmakuPool.clear();
+		}
+
 		/// render danmaku
 
 	}, {
 		key: "render",
 		value: function render() {
 			this._checkSize();
-			this.canvas.clearRect(0, 0, this.element.width, this.element.height);
 			this.update();
 			var _iteratorNormalCompletion = true;
 			var _didIteratorError = false;
@@ -1170,6 +1177,7 @@ var DanmakuRenderer = function () {
 	}, {
 		key: "_autoRender",
 		value: function _autoRender() {
+			this.canvas.clearRect(0, 0, this.element.width, this.element.height);
 			this.render();
 			this.renderLoopId = requestAnimationFrame(this._autoRender.bind(this));
 		}

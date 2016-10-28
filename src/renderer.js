@@ -53,10 +53,14 @@ export class DanmakuRenderer {
 		this.danmakuPool.add(new Danmaku(this, content))
 	}
 
+	/// clear danmakuPool
+	clear() {
+		this.danmakuPool.clear()
+	}
+
 	/// render danmaku
 	render() {
 		this._checkSize()
-		this.canvas.clearRect(0, 0, this.element.width, this.element.height)
 		this.update()
 		for (let danmaku of this.danmakuPool) {
 			danmaku.render()
@@ -76,6 +80,7 @@ export class DanmakuRenderer {
 
 	/// auto render
 	_autoRender() {
+		this.canvas.clearRect(0, 0, this.element.width, this.element.height)
 		this.render()
 		this.renderLoopId = requestAnimationFrame(this._autoRender.bind(this))
 	}
