@@ -103,7 +103,7 @@ export class DanmakuRenderer {
 				limitList.push({
 					from: danmaku.y - height,
 					to: danmaku.y + danmaku.height,
-					max: danmaku.getMaxLength(time)
+					max: danmaku._getMaxLength(time)
 				})
 			}
 		return limitList

@@ -1,6 +1,6 @@
 {
   "name": "danmakubox.js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A javascript danmaku renderer for canvas2d",
   "main": "dist/danmakubox.js",
   "scripts": {

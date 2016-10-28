@@ -869,113 +869,7 @@ var Danmaku = function () {
 		// init
 		this.age = 0;
 		this.x = this.renderer.element.width;
-
-		// get y
-		// avoiding danmaku overlaying
-		var limitList = this.renderer._getLimit(this.height, this.time);
-
-		var limitData = [{ y: 0, max: 0 }, { y: this.renderer.element.height, max: Infinity }];
-		var _iteratorNormalCompletion = true;
-		var _didIteratorError = false;
-		var _iteratorError = undefined;
-
-		try {
-			for (var _iterator = limitList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-				var limit = _step.value;
-
-
-				var begin = false;
-				var end = false;
-
-				if (limit.from < 0) {
-					limit.from = 0;
-				}
-				if (limit.to > this.renderer.element.height) {
-					limit.to = this.renderer.element.height;
-				}
-
-				for (var _i2 = 0; _i2 < limitData.length; _i2++) {
-
-					if (limitData[_i2].y >= limit.from && !begin) {
-
-						begin = true;
-
-						if (limitData[_i2].y >= limit.to && !end) {
-
-							end = true;
-
-							if (limitData[_i2].max > limit.max) {
-								limitData.splice(_i2, 1, { y: limit.from, max: limitData[_i2].max }, { y: limit.to, max: limit.max }, { y: limitData[_i2].y, max: limitData[_i2].max });
-								_i2 += 2;
-							}
-							break;
-						}
-
-						if (limitData[_i2].max > limit.max) {
-							limitData.splice(_i2, 1, { y: limit.from, max: limitData[_i2].max }, { y: limitData[_i2].y, max: limit.max });
-							_i2++;
-						}
-						continue;
-					}
-
-					if (limitData[_i2].y >= limit.to && !end) {
-
-						end = true;
-
-						if (limitData[_i2].max > limit.max) {
-							limitData.splice(_i2, 1, { y: limit.to, max: limit.max }, { y: limitData[_i2].y, max: limitData[_i2].max });
-							_i2++;
-						}
-						break;
-					}
-
-					if (begin && !end) {
-
-						if (limitData[_i2].max > limit.max) {
-							limitData.splice(_i2, 1, { y: limitData[_i2].y, max: limit.max });
-						}
-					}
-				}
-			}
-		} catch (err) {
-			_didIteratorError = true;
-			_iteratorError = err;
-		} finally {
-			try {
-				if (!_iteratorNormalCompletion && _iterator.return) {
-					_iterator.return();
-				}
-			} finally {
-				if (_didIteratorError) {
-					throw _iteratorError;
-				}
-			}
-		}
-
-		for (var i = 0; i < limitData.length; i++) {
-			if (i !== 0) {
-				if (limitData[i].y === limitData[i - 1].y) {
-					limitData.splice(i, 1);
-					i--;
-				}
-			}
-		}
-
-		var target = 0;
-		var max = 0;
-
-		for (var _i = 0; _i < limitData.length; _i++) {
-
-			if (limitData[_i].max > this.width) {
-				target = limitData[_i - 1].y;
-				break;
-			} else if (limitData[_i].max > max) {
-				max = limitData[_i].max;
-				target = limitData[_i - 1].y;
-			}
-		}
-
-		this.y = target;
+		this.y = this._getY();
 	}
 
 	/// step into next frame
@@ -1009,14 +903,136 @@ var Danmaku = function () {
 		/// get the max length of danmaku that appear with the same y and will not catch this danmaku (may be negative)
 
 	}, {
-		key: "getMaxLength",
-		value: function getMaxLength(time) {
+		key: "_getMaxLength",
+		value: function _getMaxLength(time) {
 			var keepOrderWhenEnd = (this.renderer.element.width - 16) * time / (this.time - this.age) - this.renderer.element.width;
 			var keepOrderWhenBegin = (this.renderer.element.width + this.width) * this.age / this.time - this.width - 16;
 			if (keepOrderWhenBegin > 0) {
 				keepOrderWhenBegin = Infinity;
+			} else {
+				keepOrderWhenBegin *= this.renderer.element.width;
+				keepOrderWhenBegin /= this.width;
 			}
 			return Math.min(keepOrderWhenBegin, keepOrderWhenEnd);
+		}
+
+		/// get valid Y at start
+
+	}, {
+		key: "_getY",
+		value: function _getY() {
+			// avoiding danmaku overlaying
+			var limitList = this.renderer._getLimit(this.height, this.time);
+
+			var top = 0;
+
+			var bottom = this.renderer.element.height - this.height;
+
+			var cutPoints = new Set();
+			var _iteratorNormalCompletion = true;
+			var _didIteratorError = false;
+			var _iteratorError = undefined;
+
+			try {
+				for (var _iterator = limitList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+					var limit = _step.value;
+
+					if (limit.from > top && limit.from < bottom) {
+						cutPoints.add(limit.from);
+					}
+					if (limit.to > top && limit.to < bottom) {
+						cutPoints.add(limit.to);
+					}
+				}
+			} catch (err) {
+				_didIteratorError = true;
+				_iteratorError = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion && _iterator.return) {
+						_iterator.return();
+					}
+				} finally {
+					if (_didIteratorError) {
+						throw _iteratorError;
+					}
+				}
+			}
+
+			var limitData = [{ y: top, max: 0 }, { y: bottom, max: Infinity }];
+			var _iteratorNormalCompletion2 = true;
+			var _didIteratorError2 = false;
+			var _iteratorError2 = undefined;
+
+			try {
+				for (var _iterator2 = Array.from(cutPoints).sort(function (a, b) {
+					return a - b;
+				})[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+					var cutPoint = _step2.value;
+
+					limitData.splice(limitData.length - 1, 0, { y: cutPoint, max: Infinity });
+				}
+			} catch (err) {
+				_didIteratorError2 = true;
+				_iteratorError2 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion2 && _iterator2.return) {
+						_iterator2.return();
+					}
+				} finally {
+					if (_didIteratorError2) {
+						throw _iteratorError2;
+					}
+				}
+			}
+
+			var _iteratorNormalCompletion3 = true;
+			var _didIteratorError3 = false;
+			var _iteratorError3 = undefined;
+
+			try {
+				for (var _iterator3 = limitList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+					var _limit = _step3.value;
+
+					for (var _i = 1; _i < limitData.length; _i++) {
+						if (limitData[_i - 1].y >= _limit.from && limitData[_i].y <= _limit.to) {
+							if (_limit.max < limitData[_i].max) {
+								limitData[_i].max = _limit.max;
+							}
+						}
+					}
+				}
+			} catch (err) {
+				_didIteratorError3 = true;
+				_iteratorError3 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion3 && _iterator3.return) {
+						_iterator3.return();
+					}
+				} finally {
+					if (_didIteratorError3) {
+						throw _iteratorError3;
+					}
+				}
+			}
+
+			var target = 0;
+			var max = -Infinity;
+
+			for (var i = 1; i < limitData.length; i++) {
+
+				if (limitData[i].max > this.width) {
+					target = limitData[i - 1].y;
+					break;
+				} else if (limitData[i].max > max) {
+					max = limitData[i].max;
+					target = limitData[i - 1].y;
+				}
+			}
+
+			return target;
 		}
 	}]);
 	return Danmaku;
@@ -1213,7 +1229,7 @@ var DanmakuRenderer = function () {
 					limitList.push({
 						from: danmaku.y - height,
 						to: danmaku.y + danmaku.height,
-						max: danmaku.getMaxLength(time)
+						max: danmaku._getMaxLength(time)
 					});
 				}
 			} catch (err) {

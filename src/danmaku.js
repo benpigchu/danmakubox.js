@@ -23,99 +23,7 @@ export class Danmaku {
 		// init
 		this.age = 0
 		this.x = this.renderer.element.width
-
-		// get y
-		// avoiding danmaku overlaying
-		let limitList = this.renderer._getLimit(this.height, this.time)
-
-		let limitData = [{y: 0, max: 0}, {y: this.renderer.element.height, max: Infinity}]
-		for (let limit of limitList) {
-
-			let begin = false
-			let end = false
-
-			if (limit.from < 0) {
-				limit.from = 0
-			}
-					if (limit.to > this.renderer.element.height) {
-				limit.to = this.renderer.element.height
-			}
-
-			for (let i = 0; i < limitData.length; i++) {
-
-				if (limitData[i].y >= limit.from && !begin) {
-
-					begin = true
-
-					if (limitData[i].y >= limit.to && !end) {
-
-						end = true
-
-						if (limitData[i].max > limit.max) {
-							limitData.splice(i, 1, {y: limit.from, max: limitData[i].max}, {y: limit.to, max: limit.max}, {y: limitData[i].y, max: limitData[i].max})
-							i += 2
-						}
-						break
-
-					}
-
-					if (limitData[i].max > limit.max) {
-						limitData.splice(i, 1, {y: limit.from, max: limitData[i].max}, {y: limitData[i].y, max: limit.max})
-						i++
-					}
-					continue
-
-				}
-
-				if (limitData[i].y >= limit.to && !end) {
-
-					end = true
-
-					if (limitData[i].max > limit.max) {
-						limitData.splice(i, 1, {y: limit.to, max: limit.max}, {y: limitData[i].y, max: limitData[i].max})
-						i++
-					}
-					break
-
-				}
-
-				if (begin && !end) {
-
-					if (limitData[i].max > limit.max) {
-						limitData.splice(i, 1, {y: limitData[i].y, max: limit.max})
-					}
-
-				}
-
-			}
-
-		}
-
-		for (let i = 0; i < limitData.length; i++) {
-			if (i !== 0) {
-				if (limitData[i].y === limitData[i - 1].y) {
-					limitData.splice(i, 1)
-					i--
-				}
-			}
-		}
-
-		let target = 0
-		let max = 0
-
-		for (let i = 0; i < limitData.length; i++) {
-
-			if (limitData[i].max > this.width) {
-				target = limitData[i - 1].y
-				break
-			} else if (limitData[i].max > max) {
-				max = limitData[i].max
-				target = limitData[i - 1].y
-			}
-
-		}
-
-		this.y = target
+		this.y = this._getY()
 
 	}
 
@@ -139,12 +47,68 @@ export class Danmaku {
 	}
 
 	/// get the max length of danmaku that appear with the same y and will not catch this danmaku (may be negative)
-	getMaxLength(time) {
+	_getMaxLength(time) {
 		let keepOrderWhenEnd = (this.renderer.element.width - 16) * time / (this.time - this.age) - this.renderer.element.width
 		let keepOrderWhenBegin = (this.renderer.element.width + this.width) * this.age / this.time - this.width - 16
 		if (keepOrderWhenBegin > 0) {
 			keepOrderWhenBegin = Infinity
+		} else {
+			keepOrderWhenBegin *= this.renderer.element.width
+			keepOrderWhenBegin /= this.width
 		}
 		return Math.min(keepOrderWhenBegin,keepOrderWhenEnd)
+	}
+
+	/// get valid Y at start
+	_getY() {
+		// avoiding danmaku overlaying
+		let limitList = this.renderer._getLimit(this.height, this.time)
+
+		let top = 0
+
+		let bottom = this.renderer.element.height-this.height
+
+		let cutPoints = new Set()
+		for (let limit of limitList) {
+			if(limit.from > top && limit.from < bottom){
+				cutPoints.add(limit.from)
+			}
+			if(limit.to > top && limit.to < bottom){
+				cutPoints.add(limit.to)
+			}
+		}
+
+		let limitData = [{y: top, max: 0}, {y: bottom, max: Infinity}]
+		for(let cutPoint of Array.from(cutPoints).sort((a, b)=> a - b)) {
+			limitData.splice(limitData.length - 1, 0, {y: cutPoint, max: Infinity})
+		}
+
+		for (let limit of limitList) {
+			for (let i = 1; i < limitData.length; i++){
+				if (limitData[i - 1].y >= limit.from && limitData[i].y <= limit.to ) {
+					if (limit.max < limitData[i].max) {
+						limitData[i].max = limit.max
+					}
+				}
+			}
+		}
+
+		let target = 0
+		let max = -Infinity
+
+		for (let i = 1; i < limitData.length; i++) {
+
+			if (limitData[i].max > this.width) {
+				target = limitData[i - 1].y
+				break
+			} else if (limitData[i].max > max) {
+				max = limitData[i].max
+				target = limitData[i - 1].y
+			}
+
+		}
+
+		return target
+
 	}
 }
