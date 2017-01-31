@@ -24,15 +24,15 @@ export class DanmakuRenderer {
 	}
 
 	/// play danmaku
-	play(){
+	play() {
 		this.update()
-		this.isRunning=true
+		this.isRunning = true
 	}
 
 	/// pause
-	pause(){
+	pause() {
 		this.update()
-		this.isRunning=false
+		this.isRunning = false
 	}
 
 	/// start auto render
@@ -70,7 +70,7 @@ export class DanmakuRenderer {
 	/// update danmaku
 	update() {
 		let currentTime = Date.now()
-		if(this.isRunning&&(currentTime - this.timeStamp>0)){
+		if (this.isRunning && (currentTime - this.timeStamp > 0)) {
 			for (let danmaku of this.danmakuPool) {
 				danmaku.step(currentTime - this.timeStamp)
 			}
@@ -87,7 +87,7 @@ export class DanmakuRenderer {
 
 	/// resize canvas
 	_checkSize() {
-		let elementRect=this.element.getBoundingClientRect()
+		let elementRect = this.element.getBoundingClientRect()
 		if (this.element.width !== elementRect.width || this.element.height !== elementRect.height) {
 			this.element.width = elementRect.width
 			this.element.height = elementRect.height
@@ -96,16 +96,14 @@ export class DanmakuRenderer {
 		return false
 	}
 
-  	/// get limit to the new added danmaku
+	/// get limit to the new added danmaku
 	_getLimit(height, time) {
 		let limitList = []
 		for (let danmaku of this.danmakuPool) {
-				limitList.push({
-					from: danmaku.y - height,
-					to: danmaku.y + danmaku.height,
-					max: danmaku._getMaxLength(time)
-				})
-			}
+			limitList.push({from: danmaku.y - height,
+				to: danmaku.y + danmaku.height,
+				max: danmaku._getMaxLength(time)})
+		}
 		return limitList
 	}
 

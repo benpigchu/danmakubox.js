@@ -31,7 +31,9 @@ export class Danmaku {
 	step(time) {
 		this.age += time
 		this.x = this.renderer.element.width - (this.renderer.element.width + this.width) * this.age / this.time
-		if (this.age > this.time) { this.renderer.danmakuPool.delete(this) }
+		if (this.age > this.time) {
+			this.renderer.danmakuPool.delete(this)
+		}
 	}
 
 	/// render danmaku into renderer
@@ -56,7 +58,7 @@ export class Danmaku {
 			keepOrderWhenBegin *= this.renderer.element.width
 			keepOrderWhenBegin /= this.width
 		}
-		return Math.min(keepOrderWhenBegin,keepOrderWhenEnd)
+		return Math.min(keepOrderWhenBegin, keepOrderWhenEnd)
 	}
 
 	/// get valid Y at start
@@ -66,26 +68,26 @@ export class Danmaku {
 
 		let top = 0
 
-		let bottom = this.renderer.element.height-this.height
+		let bottom = this.renderer.element.height - this.height
 
 		let cutPoints = new Set()
 		for (let limit of limitList) {
-			if(limit.from > top && limit.from < bottom){
+			if (limit.from > top && limit.from < bottom) {
 				cutPoints.add(limit.from)
 			}
-			if(limit.to > top && limit.to < bottom){
+			if (limit.to > top && limit.to < bottom) {
 				cutPoints.add(limit.to)
 			}
 		}
 
 		let limitData = [{y: top, max: 0}, {y: bottom, max: Infinity}]
-		for(let cutPoint of Array.from(cutPoints).sort((a, b)=> a - b)) {
+		for (let cutPoint of Array.from(cutPoints).sort((a, b) => a - b)) {
 			limitData.splice(limitData.length - 1, 0, {y: cutPoint, max: Infinity})
 		}
 
 		for (let limit of limitList) {
-			for (let i = 1; i < limitData.length; i++){
-				if (limitData[i - 1].y >= limit.from && limitData[i].y <= limit.to ) {
+			for (let i = 1;i < limitData.length;i ++) {
+				if (limitData[i - 1].y >= limit.from && limitData[i].y <= limit.to) {
 					if (limit.max < limitData[i].max) {
 						limitData[i].max = limit.max
 					}
@@ -94,9 +96,9 @@ export class Danmaku {
 		}
 
 		let target = 0
-		let max = -Infinity
+		let max = - Infinity
 
-		for (let i = 1; i < limitData.length; i++) {
+		for (let i = 1;i < limitData.length;i ++) {
 
 			if (limitData[i].max > this.width) {
 				target = limitData[i - 1].y
