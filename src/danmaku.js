@@ -1,23 +1,21 @@
 /// the danmaku class
 export class Danmaku {
 
-	constructor(renderer, content) {
+	constructor(renderer, content, style = {}) {
 
 		// basic
 		this.renderer = renderer
 		this.content = content
 
 		// style
-		this.time = this.renderer.time
-		this.color = this.renderer.color
-		this.strokeColor = this.renderer.strokeColor
+		this.style = Object.assign({}, this.renderer.style, style)
 
 		// get size
 		this.renderer.canvas.font = this.renderer.fontSize + "px Roboto, Microsoft YaHei, 黑体, 宋体, sans-serif"
 		this.renderer.canvas.textAlign = "left"
 		this.renderer.canvas.textBaseline = "top"
 		let textMeasure = this.renderer.canvas.measureText(this.content)
-		this.height = this.renderer.fontSize
+		this.height = this.style.fontSize
 		this.width = textMeasure.width
 
 		// init
@@ -30,16 +28,16 @@ export class Danmaku {
 	/// step into next frame
 	step(time) {
 		this.age += time
-		this.x = this.renderer.element.width - (this.renderer.element.width + this.width) * this.age / this.time
-		if (this.age > this.time) {
+		this.x = this.renderer.element.width - (this.renderer.element.width + this.width) * this.age / this.style.time
+		if (this.age > this.style.time) {
 			this.renderer.danmakuPool.delete(this)
 		}
 	}
 
 	/// render danmaku into renderer
 	render() {
-		this.renderer.canvas.fillStyle = this.color
-		this.renderer.canvas.strokeStyle = this.strokeColor
+		this.renderer.canvas.fillStyle = this.style.color
+		this.renderer.canvas.strokeStyle = this.style.strokeColor
 		this.renderer.canvas.lineWidth = 2
 		this.renderer.canvas.textAlign = "left"
 		this.renderer.canvas.textBaseline = "top"
@@ -50,8 +48,8 @@ export class Danmaku {
 
 	/// get the max length of danmaku that appear with the same y and will not catch this danmaku (may be negative)
 	_getMaxLength(time) {
-		let keepOrderWhenEnd = (this.renderer.element.width - 16) * time / (this.time - this.age) - this.renderer.element.width
-		let keepOrderWhenBegin = (this.renderer.element.width + this.width) * this.age / this.time - this.width - 16
+		let keepOrderWhenEnd = (this.renderer.element.width - 16) * time / (this.style.time - this.age) - this.renderer.element.width
+		let keepOrderWhenBegin = (this.renderer.element.width + this.width) * this.age / this.style.time - this.width - 16
 		if (keepOrderWhenBegin > 0) {
 			keepOrderWhenBegin = Infinity
 		} else {
@@ -64,7 +62,7 @@ export class Danmaku {
 	/// get valid Y at start
 	_getY() {
 		// avoiding danmaku overlaying
-		let limitList = this.renderer._getLimit(this.height, this.time)
+		let limitList = this.renderer._getLimit(this.height, this.style.time)
 
 		let top = 0
 

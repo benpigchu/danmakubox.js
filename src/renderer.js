@@ -2,17 +2,14 @@ import {Danmaku} from "./danmaku.js"
 /// the renderer class
 export class DanmakuRenderer {
 
-	constructor(canvas, color = "#000000", fontSize = 32, time = 15000, strokeColor = "#cccccc") {
+	constructor(canvas, style = {}) {
 
 		// basic
 		this.element = document.getElementById(canvas)
 		this.canvas = this.element.getContext("2d")
 
 		// style
-		this.color = color
-		this.fontSize = fontSize
-		this.time = time
-		this.strokeColor = strokeColor
+		this.style = Object.assign({color: "#000000", fontSize: 32, time: 15000, strokeColor: "#cccccc"}, style)
 
 		// init
 		this.danmakuPool = new Set()
@@ -48,9 +45,9 @@ export class DanmakuRenderer {
 	}
 
 	/// add danmaku into danmakuPool
-	send(content) {
+	send(content, style) {
 		this.update()
-		this.danmakuPool.add(new Danmaku(this, content))
+		this.danmakuPool.add(new Danmaku(this, content, style))
 	}
 
 	/// clear danmakuPool
