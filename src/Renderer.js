@@ -98,12 +98,10 @@ export class DanmakuRenderer {
 	}
 
 	/// get limit to the new added danmaku
-	_getLimit(height, time) {
+	_getLimit(...args) {
 		let limitList = []
 		for (let danmaku of this.danmakuPool) {
-			limitList.push({from: danmaku.y - height,
-				to: danmaku.y + danmaku.height,
-				max: danmaku._getMaxLength(time)})
+			limitList.push(danmaku._getLimit(...args))
 		}
 		return limitList
 	}

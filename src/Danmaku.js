@@ -19,8 +19,7 @@ export class Danmaku {
 
 		// init
 		this.age = 0
-		this.x = this.renderer.element.width
-		this.y = this._getY()
+		this._initLayout()
 	}
 
 	/// step into next frame
@@ -41,5 +40,15 @@ export class Danmaku {
 		this.renderer.canvas.font = this.height + "px Roboto, Microsoft YaHei, 黑体, 宋体, sans-serif"
 		this.renderer.canvas.strokeText(this.content, this.x, this.y)
 		this.renderer.canvas.fillText(this.content, this.x, this.y)
+	}
+
+	/// init Layout
+	_initLayout() {
+		throw new Error("This is an abstract method!")
+	}
+
+	/// get limit to other same kind danmaku
+	_getLimit(...args) {
+		throw new Error("This is an abstract method!")
 	}
 }

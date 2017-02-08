@@ -8,8 +8,10 @@ export class RTLDanmaku extends Danmaku {
 		this.x = this.renderer.element.width - (this.renderer.element.width + this.width) * this.age / this.style.time
 	}
 
-	/// get the max length of danmaku that appear with the same y and will not catch this danmaku (may be negative)
-	_getMaxLength(time) {
+	/// get limit to other same kind danmaku
+	/// if the danmaku's y is between from and to, it's length should not longer than max
+	/// notice the max can be negative
+	_getLimit(weight, height, time) {
 		let keepOrderWhenEnd = (this.renderer.element.width - 16) * time / (this.style.time - this.age) - this.renderer.element.width
 		let keepOrderWhenBegin = (this.renderer.element.width + this.width) * this.age / this.style.time - this.width - 16
 		if (keepOrderWhenBegin > 0) {
@@ -19,13 +21,15 @@ export class RTLDanmaku extends Danmaku {
 			keepOrderWhenBegin /= this.width
 		}
 		let maxLength = Math.min(keepOrderWhenBegin, keepOrderWhenEnd)
-		return maxLength
+		return {from: this.y - height,
+				to: this.y + this.height,
+				max: maxLength}
 	}
 
-	/// get valid Y at start
-	_getY() {
+	/// init Layout
+	_initLayout() {
 		// avoiding danmaku overlaying
-		let limitList = this.renderer._getLimit(this.height, this.style.time)
+		let limitList = this.renderer._getLimit(this.width, this.height, this.style.time)
 
 		let top = 0
 
@@ -58,7 +62,6 @@ export class RTLDanmaku extends Danmaku {
 
 		let target = 0
 		let max = - Infinity
-
 		for (let i = 1;i < limitData.length;i ++) {
 
 			if (limitData[i].max > this.width) {
@@ -71,7 +74,8 @@ export class RTLDanmaku extends Danmaku {
 
 		}
 
-		return target
+		this.x = this.renderer.element.width
+		this.y = target
 
 	}
 }
