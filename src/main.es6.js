@@ -1,1 +1,1 @@
-export {DanmakuRenderer} from "./renderer.js"
+export {DanmakuRenderer} from "./Renderer.js"

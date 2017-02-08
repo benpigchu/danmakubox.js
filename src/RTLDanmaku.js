@@ -1,5 +1,5 @@
 /// the danmaku class
-export class Danmaku {
+export class RTLDanmaku {
 
 	constructor(renderer, content, style = {}) {
 
