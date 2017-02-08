@@ -51,7 +51,14 @@ export class DanmakuRenderer {
 	/// add danmaku into danmakuPool
 	send(content, style) {
 		this.update()
-		this.danmakuPool.add(new RTLDanmaku(this, content, style))
+		let danmaku = new RTLDanmaku(this, content, style)
+		this.danmakuPool.add(danmaku)
+		return danmaku
+	}
+
+	/// remove danmaku from danmakuPool
+	withdraw(danmaku) {
+		return this.danmakuPool.delete(danmaku)
 	}
 
 	/// clear danmakuPool
