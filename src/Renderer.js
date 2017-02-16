@@ -56,6 +56,11 @@ export class DanmakuRenderer {
 		return danmaku
 	}
 
+	/// set renderer style
+	setStyle(newStyle) {
+		Object.assign(this.style, newStyle)
+	}
+
 	/// remove danmaku from danmakuPool
 	withdraw(danmaku) {
 		return this.danmakuPool.delete(danmaku)
