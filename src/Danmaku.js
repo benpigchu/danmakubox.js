@@ -38,12 +38,19 @@ export class Danmaku {
 		this.renderer.canvas.textAlign = "left"
 		this.renderer.canvas.textBaseline = "top"
 		this.renderer.canvas.font = this.height + "px " + this.style.fontFamily
-		this.renderer.canvas.strokeText(this.content, this.x, this.y)
-		this.renderer.canvas.fillText(this.content, this.x, this.y)
+		let position = this._getPosition()
+		this.renderer.canvas.strokeText(this.content, position.x, position.y)
+		this.renderer.canvas.fillText(this.content, position.x, position.y)
 	}
 
 	/// init Layout
 	_initLayout() {
+		throw new Error("This is an abstract method!")
+	}
+
+	/// get paint position used by render method
+	/// if render method is not overrided, this should return top-left position {x,y}
+	_getPosition() {
 		throw new Error("This is an abstract method!")
 	}
 

@@ -2,12 +2,6 @@ import {Danmaku} from "./Danmaku.js"
 /// the danmaku class
 export class RTLDanmaku extends Danmaku {
 
-	/// step into next frame
-	step(time) {
-		super.step(time)
-		this.x = this.renderer.element.width - (this.renderer.element.width + this.width) * this.age / this.style.time
-	}
-
 	/// get limit to other same kind danmaku
 	/// if the danmaku's y is between from and to, it's length should not longer than max
 	/// notice the max can be negative
@@ -21,8 +15,8 @@ export class RTLDanmaku extends Danmaku {
 			keepOrderWhenBegin /= this.width
 		}
 		let maxLength = Math.min(keepOrderWhenBegin, keepOrderWhenEnd)
-		return {from: this.y - height,
-				to: this.y + this.height,
+		return {from: this.distanceFromTop - height,
+				to: this.distanceFromTop + this.height,
 				max: maxLength}
 	}
 
@@ -32,7 +26,6 @@ export class RTLDanmaku extends Danmaku {
 		let limitList = this.renderer._getLimit(this.width, this.height, this.style.time)
 
 		let top = 0
-
 		let bottom = this.renderer.element.height - this.height
 
 		let cutPoints = new Set()
@@ -74,8 +67,13 @@ export class RTLDanmaku extends Danmaku {
 
 		}
 
-		this.x = this.renderer.element.width
-		this.y = target
+		this.distanceFromTop = target
 
+	}
+
+	/// get paint position used by render method
+	/// top-left position {x,y}
+	_getPosition() {
+		return {x: this.renderer.element.width - (this.renderer.element.width + this.width) * this.age / this.style.time, y: this.distanceFromTop}
 	}
 }
