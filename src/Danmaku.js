@@ -1,7 +1,15 @@
 /// the danmaku base class
 export class Danmaku {
 
-	constructor(renderer, content, style = {}) {
+	/// the final derived class should have a constructor like:
+	/// constructor(...arg){super(<insert your classname>,...arg)}
+	/// and the none-final derived class should have a constructor like:
+	/// constructor(type=<insert your classname>,...arg){super(type,...arg)}
+	constructor(type, renderer, content, style = {}) {
+
+		// record type to find danmaku pool
+		this.type = type
+
 		// basic
 		this.renderer = renderer
 		this.content = content
@@ -26,7 +34,7 @@ export class Danmaku {
 	step(time) {
 		this.age += time
 		if (this.age > this.style.time) {
-			this.renderer.danmakuPool.delete(this)
+			this.renderer.danmakuPools.get(this.type).delete(this)
 		}
 	}
 

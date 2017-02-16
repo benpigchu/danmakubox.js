@@ -1,6 +1,10 @@
 import {Danmaku} from "./Danmaku.js"
-/// the danmaku class
+/// the right-to-left danmaku class
 export class RTLDanmaku extends Danmaku {
+
+	constructor(...arg) {
+		super(RTLDanmaku, ...arg)
+	}
 
 	/// get limit to other same kind danmaku
 	/// if the danmaku's y is between from and to, it's length should not longer than max
@@ -23,7 +27,7 @@ export class RTLDanmaku extends Danmaku {
 	/// init Layout
 	_initLayout() {
 		// avoiding danmaku overlaying
-		let limitList = this.renderer._getLimit(this.width, this.height, this.style.time)
+		let limitList = this.renderer._getLimit(this, this.width, this.height, this.style.time)
 
 		let top = 0
 		let bottom = this.renderer.element.height - this.height
@@ -74,6 +78,7 @@ export class RTLDanmaku extends Danmaku {
 	/// get paint position used by render method
 	/// top-left position {x,y}
 	_getPosition() {
-		return {x: this.renderer.element.width - (this.renderer.element.width + this.width) * this.age / this.style.time, y: this.distanceFromTop}
+		return {x: this.renderer.element.width - (this.renderer.element.width + this.width) * this.age / this.style.time,
+			y: this.distanceFromTop}
 	}
 }

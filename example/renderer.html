@@ -26,6 +26,9 @@
 let renderer = new DanmakuBox.DanmakuRenderer("renderer");
 renderer.play()
 renderer.startAutoRender()
-setInterval(()=>{renderer.send(["nya","nyanyanyanyanyanya~~"][parseInt(Math.random()*1.5)])},100)
+let interval=6
+let frameCount=0
+let send=()=>{frameCount+=1;frameCount%=interval;if(frameCount===0){renderer.send(["nya","nyanyanyanyanyanya~~"][parseInt(Math.random()*1.5)])};requestAnimationFrame(send)}
+send()
 </script>
 </html>

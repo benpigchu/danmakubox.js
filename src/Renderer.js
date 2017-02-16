@@ -16,12 +16,20 @@ export class DanmakuRenderer {
 		this.style = Object.assign({color: "#000000", fontFamily: "Roboto, Microsoft YaHei, 黑体, 宋体, sans-serif", fontSize: 32, time: 15000, strokeColor: "#cccccc"}, style)
 
 		// init
-		this.danmakuPool = new Set()
+		this.nameToType = new Map()
+		this.danmakuPools = new Map()
+		this.registerDanmakuType("rtl", RTLDanmaku)
 		this.timeStamp = Date.now()
 		this.isRunning = false
 		this.isAutoRender = false
 		this.renderLoopId = 0
 
+	}
+
+	/// register costume danmaku type
+	registerDanmakuType(name, type) {
+		this.nameToType.set(name, type)
+		this.danmakuPools.set(type, new Set())
 	}
 
 	/// play danmaku
@@ -51,8 +59,9 @@ export class DanmakuRenderer {
 	/// add danmaku into danmakuPool
 	send(content, style) {
 		this.update()
-		let danmaku = new RTLDanmaku(this, content, style)
-		this.danmakuPool.add(danmaku)
+		let DanmakuType = this.nameToType.get("rtl")
+		let danmaku = new DanmakuType(this, content, style)
+		this.danmakuPools.get(DanmakuType).add(danmaku)
 		return danmaku
 	}
 
@@ -63,20 +72,24 @@ export class DanmakuRenderer {
 
 	/// remove danmaku from danmakuPool
 	withdraw(danmaku) {
-		return this.danmakuPool.delete(danmaku)
+		return this.danmakuPools.get(danmaku.type).delete(danmaku)
 	}
 
 	/// clear danmakuPool
 	clear() {
-		this.danmakuPool.clear()
+		for (let pair of this.danmakuPools) {
+			pair[1].clear()
+		}
 	}
 
 	/// render danmaku
 	render() {
 		this._checkSize()
 		this.update()
-		for (let danmaku of this.danmakuPool) {
-			danmaku.render()
+		for (let pair of this.danmakuPools) {
+			for (let danmaku of pair[1]) {
+				danmaku.render()
+			}
 		}
 	}
 
@@ -84,8 +97,10 @@ export class DanmakuRenderer {
 	update() {
 		let currentTime = Date.now()
 		if (this.isRunning && (currentTime - this.timeStamp > 0)) {
-			for (let danmaku of this.danmakuPool) {
-				danmaku.step(currentTime - this.timeStamp)
+			for (let pair of this.danmakuPools) {
+				for (let danmaku of pair[1]) {
+					danmaku.step(currentTime - this.timeStamp)
+				}
 			}
 		}
 		this.timeStamp = currentTime
@@ -110,10 +125,10 @@ export class DanmakuRenderer {
 	}
 
 	/// get limit to the new added danmaku
-	_getLimit(...args) {
+	_getLimit(danmaku, ...args) {
 		let limitList = []
-		for (let danmaku of this.danmakuPool) {
-			limitList.push(danmaku._getLimit(...args))
+		for (let existedDanmaku of this.danmakuPools.get(danmaku.type)) {
+			limitList.push(existedDanmaku._getLimit(...args))
 		}
 		return limitList
 	}
