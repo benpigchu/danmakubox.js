@@ -10,7 +10,7 @@ export class Danmaku {
 		this.style = Object.assign({}, this.renderer.style, style)
 
 		// get size
-		this.renderer.canvas.font = this.style.fontSize + "px Roboto, Microsoft YaHei, 黑体, 宋体, sans-serif"
+		this.renderer.canvas.font = this.style.fontSize + "px " + this.style.fontFamily
 		this.renderer.canvas.textAlign = "left"
 		this.renderer.canvas.textBaseline = "top"
 		let textMeasure = this.renderer.canvas.measureText(this.content)
@@ -37,7 +37,7 @@ export class Danmaku {
 		this.renderer.canvas.lineWidth = 2
 		this.renderer.canvas.textAlign = "left"
 		this.renderer.canvas.textBaseline = "top"
-		this.renderer.canvas.font = this.height + "px Roboto, Microsoft YaHei, 黑体, 宋体, sans-serif"
+		this.renderer.canvas.font = this.height + "px " + this.style.fontFamily
 		this.renderer.canvas.strokeText(this.content, this.x, this.y)
 		this.renderer.canvas.fillText(this.content, this.x, this.y)
 	}

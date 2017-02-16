@@ -13,7 +13,7 @@ export class DanmakuRenderer {
 		this.canvas = this.element.getContext("2d")
 
 		// style
-		this.style = Object.assign({color: "#000000", fontSize: 32, time: 15000, strokeColor: "#cccccc"}, style)
+		this.style = Object.assign({color: "#000000", fontFamily: "Roboto, Microsoft YaHei, 黑体, 宋体, sans-serif", fontSize: 32, time: 15000, strokeColor: "#cccccc"}, style)
 
 		// init
 		this.danmakuPool = new Set()
