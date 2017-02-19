@@ -62,7 +62,7 @@ export class DanmakuRenderer {
 	send(content, style) {
 		let message
 		let typename
-		if (typeof content === "string") {
+		if ((typeof content) === "string") {
 			message = content
 			typename = "rtl"
 		} else {
@@ -71,7 +71,7 @@ export class DanmakuRenderer {
 		}
 		this.update()
 		let DanmakuType = this.nameToType.get(typename)
-		let danmaku = new DanmakuType(DanmakuType, this, content, style)
+		let danmaku = new DanmakuType(DanmakuType, this, message, style)
 		this.danmakuPools.get(DanmakuType).add(danmaku)
 		return danmaku
 	}
