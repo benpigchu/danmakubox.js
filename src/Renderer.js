@@ -67,7 +67,7 @@ export class DanmakuRenderer {
 			typename = "rtl"
 		} else {
 			message = content.message
-			typename = this.nameToType.has(content.type) ? content.type : "rlt"
+			typename = this.nameToType.has(content.type) ? content.type : "rtl"
 		}
 		this.update()
 		let DanmakuType = this.nameToType.get(typename)
