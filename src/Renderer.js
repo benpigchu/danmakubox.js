@@ -1,4 +1,4 @@
-import {RTLDanmaku} from "./RTLDanmaku.js"
+import {danmakuTypes} from "./danmakuTypes.js"
 /// the renderer class
 export class DanmakuRenderer {
 
@@ -18,7 +18,9 @@ export class DanmakuRenderer {
 		// init
 		this.nameToType = new Map()
 		this.danmakuPools = new Map()
-		this.registerDanmakuType("rtl", RTLDanmaku)
+		for (let pair of danmakuTypes) {
+			this.registerDanmakuType(...pair)
+		}
 		this.timeStamp = Date.now()
 		this.isRunning = false
 		this.isAutoRender = false
@@ -58,9 +60,18 @@ export class DanmakuRenderer {
 
 	/// add danmaku into danmakuPool
 	send(content, style) {
+		let message
+		let typename
+		if (typeof content === "string") {
+			message = content
+			typename = "rtl"
+		} else {
+			message = content.message
+			typename = this.nameToType.has(content.type) ? content.type : "rlt"
+		}
 		this.update()
-		let DanmakuType = this.nameToType.get("rtl")
-		let danmaku = new DanmakuType(this, content, style)
+		let DanmakuType = this.nameToType.get(typename)
+		let danmaku = new DanmakuType(DanmakuType, this, content, style)
 		this.danmakuPools.get(DanmakuType).add(danmaku)
 		return danmaku
 	}

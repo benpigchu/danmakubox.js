@@ -2,10 +2,6 @@ import {Danmaku} from "./Danmaku.js"
 /// the right-to-left danmaku class
 export class RTLDanmaku extends Danmaku {
 
-	constructor(...arg) {
-		super(RTLDanmaku, ...arg)
-	}
-
 	/// get limit to other same kind danmaku
 	/// if the danmaku's y is between from and to, it's length should not longer than max
 	/// notice the max can be negative

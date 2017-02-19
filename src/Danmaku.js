@@ -1,11 +1,6 @@
 /// the danmaku base class
 export class Danmaku {
 
-	/// the final derived class should have a constructor like:
-	/// constructor(...arg){super(<insert your classname>,...arg)}
-	/// and the none-final derived class should have a constructor like:
-	/// constructor(type,...arg){super(type,...arg)}
-	/// and it should be abstract and never be registered
 	constructor(type, renderer, content, style = {}) {
 
 		// record type to find danmaku pool
