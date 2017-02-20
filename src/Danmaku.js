@@ -18,7 +18,7 @@ export class Danmaku {
 		this.renderer.canvas.textAlign = "left"
 		this.renderer.canvas.textBaseline = "top"
 		let textMeasure = this.renderer.canvas.measureText(this.content)
-		this.height = this.style.fontSize
+		this.height = this.style.fontSize * 1.15 // get an around height
 		this.width = textMeasure.width
 
 		// init
@@ -41,7 +41,7 @@ export class Danmaku {
 		this.renderer.canvas.lineWidth = 2
 		this.renderer.canvas.textAlign = "left"
 		this.renderer.canvas.textBaseline = "top"
-		this.renderer.canvas.font = this.height + "px " + this.style.fontFamily
+		this.renderer.canvas.font = this.style.fontSize + "px " + this.style.fontFamily
 		let position = this._getPosition()
 		this.renderer.canvas.strokeText(this.content, position.x, position.y)
 		this.renderer.canvas.fillText(this.content, position.x, position.y)

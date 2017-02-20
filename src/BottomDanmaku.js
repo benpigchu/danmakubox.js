@@ -1,12 +1,12 @@
 import {Danmaku} from "./Danmaku.js"
-/// the top danmaku class
-export class TopDanmaku extends Danmaku {
+/// the bottom danmaku class
+export class BottomDanmaku extends Danmaku {
 
 	/// get limit to other same kind danmaku
 	/// the danmaku's y shound not between from and to
 	_getLimit(weight, height, time) {
-		return {from: this.distanceFromTop - height,
-				to: this.distanceFromTop + this.height}
+		return {from: this.distanceFromBottom - height,
+				to: this.distanceFromBottom + this.height}
 	}
 
 	/// init Layout
@@ -54,7 +54,7 @@ export class TopDanmaku extends Danmaku {
 
 		}
 
-		this.distanceFromTop = target
+		this.distanceFromBottom = target
 
 	}
 
@@ -62,6 +62,6 @@ export class TopDanmaku extends Danmaku {
 	/// top-left position {x,y}
 	_getPosition() {
 		return {x: (this.renderer.element.width - this.width) / 2,
-			y: this.distanceFromTop}
+			y: (this.renderer.element.height - this.distanceFromBottom - this.height)}
 	}
 }

@@ -28,7 +28,7 @@ renderer.play()
 renderer.startAutoRender()
 let interval=6
 let frameCount=0
-let send=()=>{frameCount+=1;frameCount%=interval;if(frameCount===0){renderer.send({type:"top",message:["nya","nyanyanyanyanyanya~~"][parseInt(Math.random()*1.5)]})};requestAnimationFrame(send)}
+let send=()=>{frameCount+=1;frameCount%=interval;if(frameCount===0){renderer.send({type:["rtl","bottom"][Math.floor(Math.random()*1.25)],message:["nlya","nyanyanyanyanyanya~~"][parseInt(Math.random()*1.5)]},{color:"#"+Math.floor(Math.random()*16*16*16*16*16*16).toString(16)})};requestAnimationFrame(send)}
 send()
 </script>
 </html>
